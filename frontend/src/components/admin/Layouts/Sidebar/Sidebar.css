@@ -1,0 +1,15 @@
+.user-image{
+    width: 60px;
+    height: 60px;
+}
+
+.online-status{
+    margin-left: 10px;
+    color: rgb(47, 243, 47);
+    font-size: 13px;
+}
+.offline-status{
+    margin-left: 10px;
+    color: rgb(255, 0, 0);
+    font-size: 13px;
+}

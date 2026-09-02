@@ -1,0 +1,11 @@
+PDF → splitIntoChunks
+        ↓
+Xenova (local embeddings, FREE)
+        ↓
+MongoDB (store vectors)
+        ↓
+Similarity search
+        ↓
+Groq (llama-3.3-70b)
+        ↓
+Answer

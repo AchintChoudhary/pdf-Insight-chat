@@ -1,0 +1,17 @@
+#sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  height: 100vh;
+  background: #212121;
+  color: #fff;
+  transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Always visible */
+#sidebar.active {
+  margin-left: 0;
+}
