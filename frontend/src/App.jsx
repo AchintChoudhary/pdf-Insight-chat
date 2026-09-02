@@ -43,12 +43,8 @@ function App() {
           path="/forgot-password"
           element={<UnProtectedRoute element={ForgotPassword} />}
         />
-        <Route
-          path="/reset-password/:token"
-          element={<UnProtectedRoute element={ResetPassword} />}
-        />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* Protected Common route for admin & User */}
         <Route
           path="/dashboard"
           element={<ProtectedRoute element={Dashboard} />}

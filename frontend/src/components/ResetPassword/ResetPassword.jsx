@@ -27,6 +27,6 @@ export default function ResetPassword() {
     <label htmlFor="new-password">New Password</label><input id="new-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} disabled={loading} autoComplete="new-password" />
     <label htmlFor="confirm-password">Confirm Password</label><input id="confirm-password" type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} disabled={loading} autoComplete="new-password" />
     {error && <div className="reset-error">{error}</div>}{success && <div className="reset-success">{success}</div>}
-    {success ? <button type="button" className="btn btn-primary" onClick={() => navigate("/login")}>Go to Login</button> : <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? "Resetting..." : "Reset Password"}</button>}
+    {success ? <button type="button" className="btn btn-primary" onClick={() => navigate("/login", { replace: true })}>Go to Login</button> : <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? "Resetting..." : "Reset Password"}</button>}
   </form><Link to="/login">Back to Login</Link></section></main>;
 }
