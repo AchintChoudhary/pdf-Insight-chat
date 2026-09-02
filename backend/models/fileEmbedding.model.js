@@ -22,6 +22,8 @@ const embeddingSchema = new mongoose.Schema(
   },
 );
 
+embeddingSchema.index({ pdf_id: 1 });
+
 
 const pdfFileModel = mongoose.model("FileEmbedding", embeddingSchema);
 

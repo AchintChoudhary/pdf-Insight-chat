@@ -33,6 +33,14 @@ trim:true,
   is_admin:{
     type:Boolean,
     default:false
+  },
+  resetPasswordToken: {
+    type: String,
+    select: false,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    select: false,
   }
 },{timestamps:{createdAt:true, updatedAt:true }});
 

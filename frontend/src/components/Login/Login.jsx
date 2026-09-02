@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -64,9 +64,7 @@ const Login = () => {
 
     useEffect(() => {
         const userData=AuthService.getUserData();
-        if (isLoggedIn && userData.is_admin) {
-            navigate('/admin/dashboard', { replace:true });
-        }else if (isLoggedIn && !userData.is_admin) {
+        if (isLoggedIn && userData) {
             navigate('/dashboard', { replace:true });
         }
     }, [isLoggedIn, navigate]);

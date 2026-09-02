@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../../Layouts/Layout/Layout";
 import AuthService from "../../../services/AuthService";
 import {Link} from 'react-router-dom'
@@ -15,18 +15,8 @@ const MultiplePdfChat = () => {
   const [editingContent, setEditingContent] = useState("");
 
   useEffect(() => {
-    getPdfs();
+    AuthService.getMultiplePdf().then((response) => setPdfs(response.data.data || [])).catch((error) => setErrors({ general: error.message }));
   }, []);
-
-  const getPdfs = async () => {
-    try {
-      const response = await AuthService.getMultiplePdf();
-      console.log(response.data.data);
-      setPdfs(response.data.data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -42,7 +32,7 @@ const MultiplePdfChat = () => {
 
     const formData = new FormData();
 
-    files.forEach((file, index) => {
+    files.forEach((file) => {
       formData.append("pdfs", file);
     });
 
@@ -51,7 +41,7 @@ const MultiplePdfChat = () => {
       const data = response.data;
       setLoading(false);
       if (data.success) {
-        getPdfs();
+        AuthService.getMultiplePdf().then((result) => setPdfs(result.data.data || []));
         e.target.reset();
         setFiles([]);
       }

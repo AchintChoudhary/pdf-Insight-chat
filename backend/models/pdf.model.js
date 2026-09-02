@@ -1,42 +1,18 @@
 const mongoose = require("mongoose");
 
-const pdfSchema = new mongoose.Schema(
-  {
-    user_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
- 
-    file_name: {
-      type: String,
-      required: true,
-    },
-    file_path: {
-      type: String,
-      required: true,
-    },
-  },
-  {
-    timestamps: { createdAt: true, updatedAt: true },
-  },
-);
+const pdfSchema = new mongoose.Schema({
+  user_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User", index: true },
+  originalName: { type: String, required: true, trim: true },
+  storagePath: { type: String, required: true, unique: true },
+  fileSize: { type: Number, required: true, min: 1 },
+  mimeType: { type: String, required: true, enum: ["application/pdf"] },
+  processingStatus: { type: String, enum: ["uploaded", "processing", "ready", "failed"], default: "uploaded" },
+}, { timestamps: true });
 
-pdfSchema.virtual("fullUrl").get(function () {
-  const baseUrl = process.env.BASE_URL;
-  return this.file_path.startsWith("http")
-    ? this.file_path
-    : `${baseUrl}${this.file_path}`;
-});
-
+pdfSchema.index({ user_id: 1, createdAt: -1 });
+pdfSchema.virtual("embeddings", { ref: "FileEmbedding", localField: "_id", foreignField: "pdf_id" });
 pdfSchema.set("toJSON", { virtuals: true });
 pdfSchema.set("toObject", { virtuals: true });
-
-pdfSchema.virtual("embeddings",{
-  ref:'FileEmbedding',
-  localField:'_id',
-  foreignField:'pdf_id'
-})
 
 const pdfFileModel = mongoose.model("PdfFile", pdfSchema);
 

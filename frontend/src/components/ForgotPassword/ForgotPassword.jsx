@@ -1,77 +1,31 @@
-import React, { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
-import AuthService from '../../services/AuthService';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import AuthService from "../../services/AuthService";
 
-const ForgotPassword = () => {
+const genericMessage = "If an account exists for this email, a password reset link has been sent.";
 
-    const [email, setEmail] = useState('');
-    const [errors, setErrors] = useState({});
+export default function ForgotPassword() {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        setErrors({});
+  const submit = async (event) => {
+    event.preventDefault(); setError(""); setMessage("");
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail) return setError("Email is required");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) return setError("Enter a valid email address");
+    setLoading(true);
+    try { await AuthService.forgotPassword({ email: normalizedEmail }); setMessage(genericMessage); setEmail(""); }
+    catch (reason) { setError(reason.response?.data?.message || "Unable to send reset email. Please try again later."); }
+    finally { setLoading(false); }
+  };
 
-        const formData = new FormData();
-        formData.append('email', email);
-
-        try {
-            const response = await AuthService.forgotPassword(formData);
-            const data = response.data;
-            alert(data.msg);
-            if (data.success) {
-                setEmail('');
-            }
-        }
-        catch (error) {
-
-            if (error.response && (error.response.status === 400 || error.response.status === 401)) {
-
-                if (error.response.data.errors) {
-                    const apiErrors = error.response.data.errors;
-                    const newErrors = {};
-                    apiErrors.forEach((apiError) => {
-                        newErrors[apiError.path] = apiError.msg;
-                    });
-
-                    setErrors(newErrors);
-                }
-                else {
-                    alert(error.response.data.msg ? error.response.data.msg : error.message);
-                }
-
-            }
-            else {
-                alert(error.message);
-            }
-
-            // alert("There was an error registering! " + error.message);
-        }
-    };
-
-    return (
-        <div className="container">
-            <h1>Forgot Password</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Email address</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        placeholder="Enter email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    {errors.email && <div className='errorMessage'>{errors.email}</div>}
-                </div>
-                <button type="submit" className="btn btn-primary mt-2">Submit</button>
-            </form>
-            <p className='mt-2'>
-                <Link to="/login">Login</Link>
-            </p>
-        </div>
-    );
-
-};
-
-export default ForgotPassword;
+  return <main className="container py-5" style={{ maxWidth: "520px" }}>
+    <h1>Forgot Password</h1><p>Enter your email and we'll send you a password reset link.</p>
+    <form onSubmit={submit} noValidate><label className="form-label" htmlFor="reset-email">Email</label><input id="reset-email" className="form-control" type="email" value={email} onChange={(event) => setEmail(event.target.value)} disabled={loading} autoComplete="email" />
+      {error && <div className="text-danger mt-2">{error}</div>}{message && <div className="text-success mt-2">{message}</div>}
+      <button className="btn btn-primary mt-3" type="submit" disabled={loading}>{loading ? "Sending..." : "Send Reset Link"}</button>
+    </form><p className="mt-3"><Link to="/login">Back to Login</Link></p>
+  </main>;
+}

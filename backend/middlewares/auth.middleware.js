@@ -4,9 +4,8 @@ const blacklistTokenModel = require("../models/blacklistToken.model");
 
 
 module.exports.authUser = async (req, res, next) => {
-  const token =
-    req.cookies.token ||
-    (req.headers.authorization && req.headers.authorization.split(" ")[1]);
+  const authorization = req.headers.authorization;
+  const token = req.cookies.token || (authorization && authorization.startsWith("Bearer ") ? authorization.slice(7) : null);
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });

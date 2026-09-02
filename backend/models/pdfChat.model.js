@@ -14,6 +14,11 @@ required:true,
 ref:'PdfConversation'
 },
 
+pdf_id:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'PdfFile'
+},
+
 user_message:{
     type:String,
     default:''
@@ -25,6 +30,8 @@ ai_message:{
 }
 
 },{timestamps:{createdAt:true, updatedAt:true }});
+
+chatSchema.index({ conversation_id: 1, createdAt: 1 });
 
 
 

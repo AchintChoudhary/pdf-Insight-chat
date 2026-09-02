@@ -2,20 +2,13 @@ const mongoose = require("mongoose");
 
 
 const conversationSchema = new mongoose.Schema({
- user_id:{
-type:mongoose.Schema.Types.ObjectId,
-required:true,
-ref:'User'
- },
-  
+    user_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+    pdf_id: { type: mongoose.Schema.Types.ObjectId, ref: "PdfFile" },
+    pdf_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: "PdfFile" }],
+    last_message: { type: String, default: "" },
+}, { timestamps: true });
 
-last_message:{
-    type:String,
-    default:''
-}
-
-
-},{timestamps:{createdAt:true, updatedAt:true }});
+conversationSchema.index({ user_id: 1, updatedAt: -1 });
 
 
 const PdfConversationModel=mongoose.model('PdfConversation',conversationSchema);

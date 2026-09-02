@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import { useState } from 'react';
 import './Sidebar.css';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../../services/AuthService';
@@ -7,9 +7,8 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     const [ sidebarActive, setSidebarActive ] = useState('');
-    const [ currentUserName, setCurrentUserName ] = useState('');
-    const [ isAdmin, setIsAdmin ] = useState(false);
     const userData = AuthService.getUserData();
+    const currentUserName = userData?.fullname?.firstname || 'User';
 
     const sidebarToggle = () => {
         if(sidebarActive != ''){
@@ -19,13 +18,6 @@ const Sidebar = () => {
             setSidebarActive('active');
         }
     }
-
-    useEffect(()=>{
-        setCurrentUserName(userData?.fullname?.firstname || "User");
-
-       setIsAdmin(userData?.is_admin || false);
-
-    },[]);
 
     const handleLogout = () => {
         AuthService.logoutUser();

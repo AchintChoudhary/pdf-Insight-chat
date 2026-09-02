@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../../Layouts/Layout/Layout";
 import AuthService from "../../../services/AuthService";
 
@@ -12,37 +12,8 @@ const SinglePdfChat = () => {
 const [messages,setMessages]=useState([])
 const [chatLoading,setChatLoading]=useState(false)
   useEffect(() => {
-    getPdfs();
+    AuthService.getPDFs().then((response) => setPdfData(response.data.data || [])).catch((error) => setErrors({ general: error.message }));
   }, []);
-
-  const getPdfs = async () => {
-    try {
-      const response = await AuthService.getPDFs();
-
-      setPdfData(response.data.data);
-    } catch (error) {
-      if (
-        error.response &&
-        (error.response.status === 400 || error.response.status == 401)
-      ) {
-        if (error.response.data.errors) {
-          const apiErrors = error.response.data.errors;
-          const newErrors = {};
-          apiErrors.forEach((apiError) => {
-            newErrors[apiError.path] = apiError.msg;
-          });
-          setErrors(newErrors);
-        } else {
-          alert(
-            error.response.data.msg ? error.response.data.msg : error.message,
-          );
-        }
-      } else {
-        alert(error.message);
-      }
-      setLoading(false);
-    }
-  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
